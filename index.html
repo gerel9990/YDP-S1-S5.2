@@ -52,11 +52,12 @@
     /* Circles */
     .rating-row input[type="radio"] {
         appearance: none;
-        width: 18px;
-        height: 18px;
+        width: 30px;
+        height: 30px;
         border-radius: 50%;
         border: 2px solid #ce2b7f;
         cursor: pointer;
+        transition: all 0.2s;
     }
 
     .rating-row input[type="radio"]:checked {
@@ -75,7 +76,15 @@
         cursor: pointer;
         font-size: 16px;
     }
+    @media (max-width: 600px) {
+        .rating-row input[type="radio"] {
+            width: 25px;
+            height: 25px;
+    }
 
+    .rating-row span {
+        font-size: 12px;
+    }
     button:hover {
         background: #d63384;
     }
@@ -245,3 +254,4 @@ function drawChart(score) {
 
 </body>
 </html>
+
