@@ -6,91 +6,124 @@
 <title>Teamwork Skills Test</title>
 
 <style>
-    body {
-        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-        background: #fff8f4;
-        color: #333;
-        margin: 0;
-        padding: 20px;
-    }
+body {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    background: #fff8f4;
+    color: #333;
+    margin: 0;
+    padding: 15px;
+}
 
-    h1 {
-        text-align: center;
-        color: #ce2b7f;
-        margin-bottom: 10px;
-    }
+/* Title */
+h1 {
+    text-align: center;
+    color: #ce2b7f;
+    margin-bottom: 15px;
+    font-size: 22px;
+}
 
-    form {
-        max-width: 900px;
-        margin: 0 auto;
-    }
+/* Mobile friendly form */
+form {
+    max-width: 900px;
+    margin: 0 auto;
+}
 
-    /* Question box */
-    .question {
-        background: #fff;
-        border: 1px solid #ffb3c6;
-        border-radius: 10px;
-        padding: 15px;
-        margin-bottom: 12px;
-        box-shadow: 0 2px 5px rgba(255, 105, 180, 0.1);
-    }
+/* Question box */
+.question {
+    background: #fff;
+    border: 1px solid #ffb3c6;
+    border-radius: 12px;
+    padding: 15px;
+    margin-bottom: 15px;
+    box-shadow: 0 2px 5px rgba(255, 105, 180, 0.1);
+}
 
-    /* Rating row */
-    .rating-row {
-        margin-top: 12px;
-        display: flex;
-        align-items: center;
-        gap: 12px;
-    }
+/* Rating row mobile layout */
+.rating-row {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
 
-    .rating-row span {
-        font-size: 13px;
-        color: #555;
-        white-space: nowrap;
-    }
+/* Text labels */
+.rating-row span {
+    font-size: 12px;
+    color: #555;
+    width: 70px;
+}
 
-  /* Circles */
+/* Radio circle bigger for touch screens */
 .rating-row input[type="radio"] {
     appearance: none;
-    width: 40px;       /* Томруулсан */
-    height: 40px;      /* Томруулсан */
+    width: 26px;
+    height: 26px;
     border-radius: 50%;
     border: 2px solid #ce2b7f;
     cursor: pointer;
-    transition: all 0.2s;
+    transition: 0.2s;
 }
 
+/* When selected – bigger + colored */
 .rating-row input[type="radio"]:checked {
+    background: #ff4fa1;
+    border-color: #ff4fa1;
+    box-shadow: 0 0 5px rgba(255, 85, 160, 0.8);
+}
+
+/* Button */
+button {
+    display: block;
+    margin: 30px auto;
+    padding: 12px 25px;
     background: #e74c8b;
-    border-color: #e74c8b;
+    color: white;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: 0.2s;
 }
 
-/* Гар утас болон жижиг дэлгэцийн хувьд */
+button:hover {
+    background: #d63384;
+}
+
+/* Result box */
+#result {
+    max-width: 900px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #fffaf3;
+    border-radius: 12px;
+    box-shadow: 0 3px 8px #f24099;
+    display: none;
+}
+
+/* MOBILE OPTIMIZATION */
 @media (max-width: 600px) {
+    .rating-row {
+        gap: 6px;
+    }
+
     .rating-row input[type="radio"] {
-        width: 35px;  /* 35px болгоно */
-        height: 35px;
+        width: 22px;
+        height: 22px;
     }
 
-    .rating-row span {
-        font-size: 12px;
+    h1 {
+        font-size: 20px;
     }
 
-    button {
-        padding: 10px 20px;
-        font-size: 15px;
+    .question {
+        padding: 12px;
     }
-}
 
     #result {
-        max-width: 900px;
-        margin: 30px auto;
-        display: none;
-        padding: 20px;
-        background: #fffaf3;
-        border-radius: 12px;
-        box-shadow: 0 3px 8px #f24099;
+        padding: 15px;
     }
+}
 </style>
 </head>
 
@@ -247,5 +280,6 @@ function drawChart(score) {
 
 </body>
 </html>
+
 
 
