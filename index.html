@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teamwork Skills Test</title>
+
+<style>
+    body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background: #fff8f4;
+        color: #333;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1 {
+        text-align: center;
+        color: #ce2b7f;
+        margin-bottom: 10px;
+    }
+
+    form {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+
+    /* Question box */
+    .question {
+        background: #fff;
+        border: 1px solid #ffb3c6;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 12px;
+        box-shadow: 0 2px 5px rgba(255, 105, 180, 0.1);
+    }
+
+    /* Rating row */
+    .rating-row {
+        margin-top: 12px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .rating-row span {
+        font-size: 13px;
+        color: #555;
+        white-space: nowrap;
+    }
+
+    /* Circles */
+    .rating-row input[type="radio"] {
+        appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        border: 2px solid #ce2b7f;
+        cursor: pointer;
+    }
+
+    .rating-row input[type="radio"]:checked {
+        background: #e74c8b;
+        border-color: #e74c8b;
+    }
+
+    button {
+        display: block;
+        margin: 30px auto;
+        padding: 12px 25px;
+        background: #e74c8b;
+        color: white;
+        border: none;
+        border-radius: 25px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+    button:hover {
+        background: #d63384;
+    }
+
+    #result {
+        max-width: 900px;
+        margin: 30px auto;
+        display: none;
+        padding: 20px;
+        background: #fffaf3;
+        border-radius: 12px;
+        box-shadow: 0 3px 8px #f24099;
+    }
+</style>
+</head>
+
+<body>
+
+<h1>Багаар хамтран ажиллах чадвар</h1>
+
+<form id="testForm">
+    <div id="questions"></div>
+</form>
+
+<button onclick="calculateScore()">Үр дүн харах</button>
+
+<div id="result">
+    <h2 id="scoreText"></h2>
+    <p style="font-size:14px; color:#555;">
+        Ү тэнхлэг нь тест бөглөсөн хүмүүсийн онооны тархалтыг харуулна.<br>
+        Таны оноо. <b id="avgScore"></b>.<br><br>
+    </p>
+    <canvas id="scoreChart" height="200"></canvas>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+// 20 QUESTIONS
+const questions = [
+"1. Би ганцаараа ажиллахаас илүүтэй бусадтай хамтарч, санаа бодлоо солилцох дуртай.",
+"2. Би бусадтай хамтран ажиллах үедээ илүү урам зориг авдаг.",
+"3. Би багийн гишүүддээ миний тусламж хэрэгтэй үед тусалдаг.",
+"4. Би төслийн өөрт харьяалагдах хэсгийнхээ явцыг багийнхандаа тогтмол мэдээлдэг.",
+"5. Би санаа бодлоо зөвхөн өөртөө хадгалах хандлагатай.",
+"6. Би багийн гишүүдийнхээ санал бодлыг анхааралтай сонсдог.",
+"7. Би шийдвэрт хүрэхийн тулд бусдад буулт хийж чаддаг.",
+"8. Багийныхаа өмнө алдаа гаргасан үедээ би хариуцлагатай ханддаг.",
+"9. Би цаг баримталдаг.",
+"10. Би багийн гишүүдтэйгээ үр дүнтэй харилцаа үүсгэж чаддаг.",
+"11. Би багийн гишүүн бүрийн давуу талыг мэддэг.",
+"12. Би багийнхаа зорилгын төлөө ажилладаг.",
+"13. Би багийн гишүүддээ итгэж, хүндэтгэдэг.",
+"14. Би багийн гишүүн бүр өөрсдийн ажлыг хэрхэн гүйцэтгэдэг талаар мэддэг.",
+"15. Би багийнхныхаа хүлээлт, стандартуудыг хуваалцдаг.",
+"16. Би асуудлыг бие даан шийдэхийг илүүд үздэг.",
+"17. Би багийнхаа дунд өөрийгөө илэрхийлэхэд тав тухтай байдаг.",
+"18. Хэн нэгэн үүрэгт ажлаа хоцроож байгаа бол би тэдэнд туслахгүй байх үе бий.",
+"19. Би санал хүсэлт, зөвлөгөөг сонсож хүлээж авдаг.",
+"20. Миний хувьд багийн бүх гишүүд тэгш эрхтэй."
+];
+
+const container = document.getElementById("questions");
+
+// Render questions
+questions.forEach((q, i) => {
+    const div = document.createElement("div");
+    div.className = "question";
+    div.innerHTML = `
+        <p>${q}</p>
+        <div class="rating-row">
+            <span>Санал нийлэхгүй</span>
+            ${[1,2,3,4,5].map(n =>
+                `<input type="radio" name="q${i+1}" value="${n}" required>`
+            ).join("")}
+            <span>Бүрэн санал нийлнэ</span>
+        </div>
+    `;
+    container.appendChild(div);
+});
+
+// ⭐⭐ CALCULATE SCORE ⭐⭐
+function calculateScore() {
+    let selected = document.querySelectorAll("input[type=radio]:checked");
+    if (selected.length < 20) {
+        alert("Бүх асуултад хариулна уу!");
+        return;
+    }
+
+    let total = 0;
+    selected.forEach(r => total += Number(r.value));
+
+    let max = 20 * 5;
+    let score = Math.round((total / max) * 100);
+
+    let meaning =
+        score <= 19 ? "Багаар ажиллах чадвар сул байх магадлалтай" :
+        score <= 39 ? "Багаар ажиллах чадвар дунджаас доогуур" :
+        score <= 60 ? "Багаар ажиллах чадвар дундаж" :
+        score <= 80 ? "Багаар ажиллах чадвар сайн" :
+        "Багаар ажиллах чадвар маш сайн";
+
+    document.getElementById("scoreText").innerHTML = score + "/100 — " + meaning;
+    document.getElementById("avgScore").innerText = score;
+
+    document.getElementById("result").style.display = "block";
+
+    drawChart(score);
+}
+
+// ⭐⭐ NORMAL DISTRIBUTION ⭐⭐
+function gaussian(x, mean, sigma) {
+    return (1 / (sigma * Math.sqrt(2 * Math.PI))) *
+           Math.exp(-0.5 * ((x - mean) / sigma) ** 2);
+}
+
+let chart;
+
+// ⭐⭐ DRAW CHART ⭐⭐
+function drawChart(score) {
+    const ctx = document.getElementById("scoreChart").getContext("2d");
+
+    let xs = [], ys = [];
+    let mean = 70, sigma = 12;
+
+    for (let i = 0; i <= 100; i++) {
+        xs.push(i);
+        ys.push(gaussian(i, mean, sigma));
+    }
+
+    if (chart) chart.destroy();
+
+    chart = new Chart(ctx, {
+        type: "line",
+        data: {
+            labels: xs,
+            datasets: [
+                {
+                    label: "Distribution",
+                    data: ys,
+                    borderColor: "#0ca4d3",
+                    borderWidth: 3,
+                    tension: 0.4,
+                    fill: false
+                },
+                {
+                    label: "Your Score",
+                    data: xs.map(n => n === score ? Math.max(...ys) : null),
+                    type: "scatter",
+                    pointRadius: 12,
+                    pointBackgroundColor: "#ee7623",
+                }
+            ]
+        },
+        options: {
+            plugins: { legend: { display: false }},
+            scales: {
+                y: { display: false },
+                x: {
+                    title: { display: true, text: "Оноо (0–100)" }
+                }
+            }
+        }
+    });
+}
+</script>
+
+</body>
+</html>
